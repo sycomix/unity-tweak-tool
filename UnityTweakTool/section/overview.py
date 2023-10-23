@@ -72,29 +72,39 @@ class Overview(Tab,Section):
         self.style_context.connect('changed', self.on_style_context_change)
 
     def on_style_context_change(self, *args):
-     try:
-        self.symbolic_color = self.style_context.get_color(Gtk.StateFlags.ACTIVE)
+        try:
+            self.symbolic_color = self.style_context.get_color(Gtk.StateFlags.ACTIVE)
 
-        appearance_symbolic_icon = self.icons.lookup_icon('unity-tweak-tool-appearance-symbolic', 24, Gtk.IconLookupFlags.FORCE_SIZE)
-        if appearance_symbolic_icon:
-            appearance_symbolic_icon_pixbuf, was_sym = appearance_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
-            self.builder.get_object('i_appearance-title').set_from_pixbuf(appearance_symbolic_icon_pixbuf)
+            if appearance_symbolic_icon := self.icons.lookup_icon(
+                'unity-tweak-tool-appearance-symbolic',
+                24,
+                Gtk.IconLookupFlags.FORCE_SIZE,
+            ):
+                appearance_symbolic_icon_pixbuf, was_sym = appearance_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
+                self.builder.get_object('i_appearance-title').set_from_pixbuf(appearance_symbolic_icon_pixbuf)
 
-        unity_symbolic_icon = self.icons.lookup_icon('unity-tweak-tool-unity-symbolic', 24, Gtk.IconLookupFlags.FORCE_SIZE)
-        if unity_symbolic_icon:
-            unity_symbolic_icon_pixbuf, was_sym = unity_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
-            self.builder.get_object('i_unity-title').set_from_pixbuf(unity_symbolic_icon_pixbuf)
+            if unity_symbolic_icon := self.icons.lookup_icon(
+                'unity-tweak-tool-unity-symbolic',
+                24,
+                Gtk.IconLookupFlags.FORCE_SIZE,
+            ):
+                unity_symbolic_icon_pixbuf, was_sym = unity_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
+                self.builder.get_object('i_unity-title').set_from_pixbuf(unity_symbolic_icon_pixbuf)
 
-        system_symbolic_icon = self.icons.lookup_icon('unity-tweak-tool-system-symbolic', 24, Gtk.IconLookupFlags.FORCE_SIZE)
-        if system_symbolic_icon:
-            system_symbolic_icon_pixbuf, was_sym = system_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
-            self.builder.get_object('i_system-title').set_from_pixbuf(system_symbolic_icon_pixbuf)
+            if system_symbolic_icon := self.icons.lookup_icon(
+                'unity-tweak-tool-system-symbolic',
+                24,
+                Gtk.IconLookupFlags.FORCE_SIZE,
+            ):
+                system_symbolic_icon_pixbuf, was_sym = system_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
+                self.builder.get_object('i_system-title').set_from_pixbuf(system_symbolic_icon_pixbuf)
 
-        wm_symbolic_icon = self.icons.lookup_icon('unity-tweak-tool-wm-symbolic', 24, Gtk.IconLookupFlags.FORCE_SIZE)
-        if wm_symbolic_icon:
-            wm_symbolic_icon_pixbuf, was_sym = wm_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
-            self.builder.get_object('i_wm-title').set_from_pixbuf(wm_symbolic_icon_pixbuf)
-     except Exception:
-        pass
+            if wm_symbolic_icon := self.icons.lookup_icon(
+                'unity-tweak-tool-wm-symbolic', 24, Gtk.IconLookupFlags.FORCE_SIZE
+            ):
+                wm_symbolic_icon_pixbuf, was_sym = wm_symbolic_icon.load_symbolic(self.symbolic_color, None, None, None)
+                self.builder.get_object('i_wm-title').set_from_pixbuf(wm_symbolic_icon_pixbuf)
+        except Exception:
+           pass
 # XXX : Temporary fix to prevent random attributeerrors.
 

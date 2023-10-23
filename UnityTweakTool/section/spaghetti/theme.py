@@ -59,7 +59,7 @@ class Themesettings ():
         self.gtkthemes={}
         self.windowthemes={}
         for theme in allthemes:
-            if all([os.path.isdir(os.path.join(theme[1],req)) for req in required]):
+            if all(os.path.isdir(os.path.join(theme[1], req)) for req in required):
                 iter=self.gtkthemestore.append(theme)
                 themename=os.path.split(theme[1])[1]
                 self.gtkthemes[themename]={'iter':iter,'path':theme[1]}
@@ -152,7 +152,9 @@ class Themesettings ():
             cursorthemesel.unselect_all()
 
         # Cursor size
-        self.ui['check_cursor_size'].set_active(True if gsettings.interface.get_int('cursor-size') is 48 else False)
+        self.ui['check_cursor_size'].set_active(
+            gsettings.interface.get_int('cursor-size') is 48
+        )
 
         # ===== Fonts ===== #
 

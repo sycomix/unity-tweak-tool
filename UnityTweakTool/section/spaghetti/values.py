@@ -35,31 +35,31 @@ from UnityTweakTool.config.ui import ui
 class values():
 
     def get_value(self, type, schema, key, key_list):
-        if schema is not None:
-            if gsettings.test_key(schema, key):
-                attr = 'get_' + type
-                return getattr(schema, attr)(key)
-            else:
-                print('%s key not present.' % key)
-                self.ui.tooltip(key_list)
+        if schema is None:
+            print(f'{schema} schema not present.')
+
+        elif gsettings.test_key(schema, key):
+            attr = f'get_{type}'
+            return getattr(schema, attr)(key)
         else:
-            print('%s schema not present.' % schema)
+            print(f'{key} key not present.')
+            self.ui.tooltip(key_list)
 
     def set_value(self, type, schema, key, setting):
-        if schema is not None:
-            if gsettings.test_key(schema, key):
-                attr = 'set_' + type
-                return getattr(schema, attr)(key, setting)
-            else:
-                print('%s key not present.' % key)
+        if schema is None:
+            print(f'{schema} schema not present.')
+
+        elif gsettings.test_key(schema, key):
+            attr = f'set_{type}'
+            return getattr(schema, attr)(key, setting)
         else:
-            print('%s schema not present.' % schema)
+            print(f'{key} key not present.')
 
     def reset_value(self, schema, key):
-        if schema is not None:
-            if gsettings.test_key(schema, key):
-                return schema.reset(key)
-            else:
-                print('%s key not present.' % key)
+        if schema is None:
+            print(f'{schema} schema not present.')
+
+        elif gsettings.test_key(schema, key):
+            return schema.reset(key)
         else:
-            print('%s schema not present.' % schema)
+            print(f'{key} key not present.')

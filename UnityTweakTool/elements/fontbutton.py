@@ -53,7 +53,7 @@ class FontButton:
 
     def register(self,handler):
         ''' register handler on a handler object '''
-        handler['on_%s_font_set'%self.id]=self.handler
+        handler[f'on_{self.id}_font_set'] = self.handler
         logger.debug('Handler for {self.id} registered'.format(self=self))
 
     def refresh(self):

@@ -61,7 +61,7 @@ class Switch:
 
     def register(self,handler):
         ''' Register handler on a handler object '''
-        handler['on_%s_active_notify'% self.id]=self.handler
+        handler[f'on_{self.id}_active_notify'] = self.handler
         logger.debug('Handler for {self.id} registered'.format(self=self))
 
     def refresh(self):

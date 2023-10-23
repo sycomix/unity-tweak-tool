@@ -59,7 +59,7 @@ class ColorChooser:
 
     def register(self,handler):
         ''' register handler on a handler object '''
-        handler['on_%s_color_set'%self.id]=self.handler
+        handler[f'on_{self.id}_color_set'] = self.handler
         logger.debug('Handler for {self.id} registered'.format(self=self))
 
     def refresh(self):
@@ -81,8 +81,7 @@ class ColorChooser:
                     int(color[7:9],16)/255
                     )
         colorspec='rgba(%s,%s,%s,%f)'%components
-        valid = Gdk.RGBA.parse(self.color,colorspec)
-        if valid:
+        if valid := Gdk.RGBA.parse(self.color, colorspec):
             self.ui.set_rgba(self.color)
 
     def get_color(self):

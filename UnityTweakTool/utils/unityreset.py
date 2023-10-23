@@ -55,7 +55,7 @@ class UnityReset():
     def resetAllKeys(self,schema,path=None,check=False):
         """Reset all keys in given Schema."""
         if check and (schema not in self.allSchemas) and (schema not in self.allRelocatableSchemas):
-            print("Ignoring missing Schema %s"%schema)
+            print(f"Ignoring missing Schema {schema}")
             return
         gsettings=Gio.Settings(schema=schema,path=path)
         for key in gsettings.list_keys():
@@ -63,7 +63,7 @@ class UnityReset():
         if gsettings.get_has_unapplied():
             gsettings.apply()
         #gsettings.sync()
-        print("Schema %s successfully reset"%schema)
+        print(f"Schema {schema} successfully reset")
 
     def resetPlugins(self):
         """Reset Compiz Plugins"""
@@ -71,7 +71,7 @@ class UnityReset():
         for schema in self.allRelocatableSchemas:
             if compizPluginRe.match(schema):
                 plugin=compizPluginRe.sub('',schema)
-                path="/org/compiz/profiles/unity/plugins/"+plugin+"/"
+                path = f"/org/compiz/profiles/unity/plugins/{plugin}/"
                 self.resetAllKeys(schema=schema,path=path)
                 
     def resetCompizChildren(self):
@@ -95,7 +95,7 @@ class UnityReset():
     def getAllKeys(schema,path=None,check=False):
         """Snapshot current settings in a given schema"""
         if check and (schema not in UnityReset.allSchemas) and (schema not in UnityReset.allRelocatableSchemas):
-            print("Ignoring missing Schema %s"%schema)
+            print(f"Ignoring missing Schema {schema}")
             return
         snapshot=dict()
         gsettings=Gio.Settings(schema=schema,path=path)
@@ -111,8 +111,8 @@ class UnityReset():
         for schema in UnityReset.allRelocatableSchemas:
             if compizPluginRe.match(schema):
                 plugin=compizPluginRe.sub('',schema)
-                schema='org.compiz.'+plugin
-                path="/org/compiz/profiles/unity/plugins/"+plugin+"/"
+                schema = f'org.compiz.{plugin}'
+                path = f"/org/compiz/profiles/unity/plugins/{plugin}/"
                 snapshot[schema]=UnityReset.getAllKeys(schema=schema,path=path)
         return snapshot
     

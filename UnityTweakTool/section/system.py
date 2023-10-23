@@ -178,40 +178,46 @@ radio_legacy_scrollbars=Radio({
     'dependants': []
 })
 
-check_horizontal_scrolling= CheckBox({
-    'id'        : 'check_horizontal_scrolling',
-    'builder'   : System.builder,
-    'schema'    : 'org.gnome.' + dynamic.touchpad_schema + '.peripherals.touchpad',
-    'path'      : None,
-    'key'       : 'horiz-scroll-enabled',
-    'type'      : 'boolean',
-    'map'       : {True:True,False:False},
-    'dependants': []
-})
+check_horizontal_scrolling = CheckBox(
+    {
+        'id': 'check_horizontal_scrolling',
+        'builder': System.builder,
+        'schema': f'org.gnome.{dynamic.touchpad_schema}.peripherals.touchpad',
+        'path': None,
+        'key': 'horiz-scroll-enabled',
+        'type': 'boolean',
+        'map': {True: True, False: False},
+        'dependants': [],
+    }
+)
 
-radio_edge=Radio({
-    'id'        : 'radio_edge',
-    'builder'   : System.builder,
-    'schema'    : 'org.gnome.' + dynamic.touchpad_schema + '.peripherals.touchpad',
-    'path'      : None,
-    'key'       : 'scroll-method',
-    'type'      : 'string',
-    'group'     : 'radio_two_finger',
-    'value'     : 'edge-scrolling',
-    'dependants': []
-})
+radio_edge = Radio(
+    {
+        'id': 'radio_edge',
+        'builder': System.builder,
+        'schema': f'org.gnome.{dynamic.touchpad_schema}.peripherals.touchpad',
+        'path': None,
+        'key': 'scroll-method',
+        'type': 'string',
+        'group': 'radio_two_finger',
+        'value': 'edge-scrolling',
+        'dependants': [],
+    }
+)
 
-radio_two_finger=Radio({
-    'id'        : 'radio_two_finger',
-    'builder'   : System.builder,
-    'schema'    : 'org.gnome.' + dynamic.touchpad_schema + '.peripherals.touchpad',
-    'path'      : None,
-    'key'       : 'scroll-method',
-    'type'      : 'string',
-    'group'     : 'radio_two_finger',
-    'value'     : 'two-finger-scrolling',
-    'dependants': []
-})
+radio_two_finger = Radio(
+    {
+        'id': 'radio_two_finger',
+        'builder': System.builder,
+        'schema': f'org.gnome.{dynamic.touchpad_schema}.peripherals.touchpad',
+        'path': None,
+        'key': 'scroll-method',
+        'type': 'string',
+        'group': 'radio_two_finger',
+        'value': 'two-finger-scrolling',
+        'dependants': [],
+    }
+)
 
 ScrollingIcons=Tab([radio_overlay_scrollbars,
                     cbox_overlay_scrollbar_mode,

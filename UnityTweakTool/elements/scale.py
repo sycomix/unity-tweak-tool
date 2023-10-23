@@ -64,7 +64,7 @@ class Scale:
 
     def register(self,handler):
         ''' Register handler on a handler object '''
-        handler['on_%s_value_changed'% self.id]=self.handler
+        handler[f'on_{self.id}_value_changed'] = self.handler
         logger.debug('Handler for {self.id} registered'.format(self=self))
 
     def refresh(self):

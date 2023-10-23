@@ -38,10 +38,8 @@ import UnityTweakTool.section.dynamic as dynamic
 def test_schema(schema):
     if schema in Gio.Settings.list_relocatable_schemas():
         pass
-    elif schema in Gio.Settings.list_schemas():
-        pass
-    else:
-        print("Error: schema %s not installed" % schema)
+    elif schema not in Gio.Settings.list_schemas():
+        print(f"Error: schema {schema} not installed")
         builder=Gtk.Builder()
         builder.set_translation_domain('unity-tweak-tool')
         ui = os.path.join(data.get_data_path(),'errordialog.ui')
@@ -53,35 +51,32 @@ def test_schema(schema):
         sys.exit()
 
 def test_key(schema, key):
-    if key in schema.list_keys():
-        return True
-    else:
-        return False
+    return key in schema.list_keys()
 
 def plugin(plugin):
-    schema = 'org.compiz.'+plugin
-    path = '/org/compiz/profiles/unity/plugins/'+plugin+'/'
+    schema = f'org.compiz.{plugin}'
+    path = f'/org/compiz/profiles/unity/plugins/{plugin}/'
     test_schema(schema)
     return Gio.Settings(schema = schema,  path = path)
 
 def unity(child = None):
     schema = 'com.canonical.Unity'
-    schema = schema+'.'+child if child else schema
+    schema = f'{schema}.{child}' if child else schema
     test_schema(schema)
     return Gio.Settings(schema)
 
 def canonical(child):
-    schema = 'com.canonical.'+child
+    schema = f'com.canonical.{child}'
     test_schema(schema)
     return Gio.Settings(schema)
 
 def compiz(child):
-    schema = 'org.compiz.'+child
+    schema = f'org.compiz.{child}'
     test_schema(schema)
     return Gio.Settings(schema)
 
 def gnome(child):
-    schema = 'org.gnome.'+child
+    schema = f'org.gnome.{child}'
     test_schema(schema)
     return Gio.Settings(schema)
 
@@ -112,7 +107,7 @@ desktop = gnome('nautilus.desktop')
 interface = gnome('desktop.interface')
 lockdown = gnome('desktop.lockdown')
 wm = gnome('desktop.wm.preferences')
-touch = gnome(dynamic.touchpad_schema + '.peripherals.touchpad')
+touch = gnome(f'{dynamic.touchpad_schema}.peripherals.touchpad')
 
 animation = plugin('animation')
 core = plugin('core')

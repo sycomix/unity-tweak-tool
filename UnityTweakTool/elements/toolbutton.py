@@ -46,5 +46,5 @@ class OverviewToolButton:
         logger.info('Handler for {self.id} executed'.format(self=self))
 
     def register(self,handler):
-        handler['on_%s_clicked'%self.id]=self.handler
+        handler[f'on_{self.id}_clicked'] = self.handler
         logger.debug('Handler for {self.id} registered'.format(self=self))

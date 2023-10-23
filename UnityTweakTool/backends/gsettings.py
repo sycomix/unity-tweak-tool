@@ -52,14 +52,13 @@ def is_valid(*,schema,path=None,key=None):
     logger.debug('Checking if schema %s with path %s has key %s',schema,path,key)
     if schema in all_schemas:
         logger.debug('Ignoring path for static schema')
-        if key is not None:
-            try:
-                _gs=GSettings[schema]
-            except KeyError as e:
-                _gs=Gio.Settings(schema)
-            return key in _gs.list_keys()
-        else:
+        if key is None:
             return True
+        try:
+            _gs=GSettings[schema]
+        except KeyError as e:
+            _gs=Gio.Settings(schema)
+        return key in _gs.list_keys()
     if schema in all_relocatable_schemas:
         if key is not None:
             assert path is not None, 'Relocatable schemas must be accompanied with path'
@@ -88,7 +87,7 @@ def get(*,schema,key,type,path=None):
     Getter that calls appropriate function on Gio.Settings depending on type. The schema,path,key,type combination is expected to be valid. Uses cache wherever possible.
     '''
     logger.debug('Attempting to get key %s of type %s from schema %s with path %s',key,type,schema,path)
-    _gskey=schema+(':'+path if path is not None else '')
+    _gskey = schema + (f':{path}' if path is not None else '')
     try:
         _gs=GSettings[_gskey]
         logger.debug('Using cached Settings object for %s',_gskey)
@@ -96,14 +95,14 @@ def get(*,schema,key,type,path=None):
         logger.debug('Cache miss for Settings object %s',_gskey)
         _gs=Gio.Settings(schema,path)
         GSettings[_gskey]=_gs
-    return _gs.__getattribute__('get_'+type)(key)
+    return _gs.__getattribute__(f'get_{type}')(key)
 
 def set(*,schema,key,type,path=None,value):
     '''
     Setter that calls appropriate function on Gio.Settings depending on the type. The schema,path,key,type combination is expected to be valid, and the value must be of the proper type. Uses cache wherever possible.
     '''
     logger.debug('Attempting to set key %s of type %s from schema %s with path %s to value %s',key,type,schema,path,value)
-    _gskey=schema+(':'+path if path is not None else '')
+    _gskey = schema + (f':{path}' if path is not None else '')
     try:
         _gs=GSettings[_gskey]
         logger.debug('Using cached Settings object for %s',_gskey)
@@ -112,12 +111,12 @@ def set(*,schema,key,type,path=None,value):
         _gs=Gio.Settings(schema,path)
         GSettings[_gskey]=_gs
 # TODO : check if value is legal, if possible.
-    return _gs.__getattribute__('set_'+type)(key,value)
+    return _gs.__getattribute__(f'set_{type}')(key, value)
 
 def reset(*,schema,key,path=None):
     ''' Reset the given key. schema,path,key combination is expected to be valid. '''
     logger.debug('Attempting to reset key %s from schema %s with path %s',key,schema,path)
-    _gskey=schema+(':'+path if path is not None else '')
+    _gskey = schema + (f':{path}' if path is not None else '')
     try:
         _gs=GSettings[_gskey]
         logger.debug('Using cached Settings object for %s',_gskey)

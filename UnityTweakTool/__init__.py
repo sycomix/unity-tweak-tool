@@ -75,7 +75,7 @@ class Application(dbus.service.Object):
             if os.access(LOCKFILE,os.R_OK):
                 with open(LOCKFILE) as pidfile:
                     old_pid = pidfile.read()
-                    OLD_CMDLINE="/proc/%s/cmdline" % old_pid
+                    OLD_CMDLINE = f"/proc/{old_pid}/cmdline"
                 if os.access(OLD_CMDLINE,os.R_OK):
                     with open(OLD_CMDLINE) as cmd_old_file:
                         cmd_old=cmd_old_file.read()
@@ -93,10 +93,10 @@ class Application(dbus.service.Object):
         except:
             # Most probably the process doesn't exist. remove and proceed
             pass
-        
+
         try:
             with open(LOCKFILE, "w") as pidfile:
-                pidfile.write("%s" % os.getpid())
+                pidfile.write(f"{os.getpid()}")
         except:
             # Not a fatal error to not write the pid.
             # XXX: Should an error be logged? Dialog shown?
@@ -139,6 +139,7 @@ class Application(dbus.service.Object):
         handler={}
         def show_overview(*args,**kwargs):
             self.notebook.set_current_page(0)
+
         handler['on_b_overview_clicked']=show_overview
 
         appmenu={
@@ -172,7 +173,7 @@ class Application(dbus.service.Object):
             return appmenu_handler
 
         for item,location in appmenu.items():
-            handler['on_menuitem_%s_activate'%item]=gen_appmenu_handler(location)
+            handler[f'on_menuitem_{item}_activate'] = gen_appmenu_handler(location)
 
         handler['on_menuimage_quit_activate']=self.quit
 
@@ -193,7 +194,7 @@ class Application(dbus.service.Object):
 
     @dbus.service.method('org.freyja.utt', in_signature='i')
     def switch_to_page(self, pageid):
-        if not pageid == -1:
+        if pageid != -1:
             self.notebook.set_current_page(pageid)
         self.window.present()
 

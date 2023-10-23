@@ -82,7 +82,7 @@ class Compizsettings ():
     def on_draw_window_snapping_draw (self, window, cr):
         self.draw_monitor(window, cr, self._base_window_snapping_surface, self.window_snapping_cboxes, 'window_snapping')
 
-    def draw_monitor (self, window, cr, base_surface, corner_store, cbox_title):
+    def draw_monitor(self, window, cr, base_surface, corner_store, cbox_title):
         x1 = 16
         y1 = 16
         x2 = 284
@@ -99,7 +99,7 @@ class Compizsettings ():
         cr.paint()
         cr.set_source_rgba(221/255, 72/255, 20/255)
 
-        if corner_store['cbox_' + cbox_title + '_top'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_top'][0] != 0:
             cr.new_path()
             cr.move_to(x3, y1)
             cr.line_to (x3 + top_bottom_width, y1)
@@ -107,7 +107,7 @@ class Compizsettings ():
             cr.arc(x3 + (top_bottom_width / 2), y1 - values['offset'], values['radius'], pi/4 , (3 * pi)/4)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_topleft'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_topleft'][0] != 0:
             cr.new_path()
             cr.move_to(x1, y1)
             cr.line_to(x1 + corner_width, y1)
@@ -115,7 +115,7 @@ class Compizsettings ():
             cr.line_to(x1, y1)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_left'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_left'][0] != 0:
             cr.new_path()
             cr.move_to(x1, y3 + left_right_width)
             cr.line_to(x1, y3)
@@ -123,7 +123,7 @@ class Compizsettings ():
             cr.arc(x1 - values['offset'], y3 + (left_right_width / 2), values['radius'], -pi/4, pi/4)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_bottomleft'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_bottomleft'][0] != 0:
             cr.new_path()
             cr.move_to(x1, y2 - corner_width)
             cr.line_to(x1, y2)
@@ -131,7 +131,7 @@ class Compizsettings ():
             cr.arc(x1, y2, corner_width, - pi / 2, 0)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_bottom'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_bottom'][0] != 0:
             cr.new_path()
             cr.move_to(x3 + top_bottom_width, y2)
             cr.line_to(x3, y2)
@@ -139,7 +139,7 @@ class Compizsettings ():
             cr.arc(x3 + (top_bottom_width / 2), y2 + values['offset'], values['radius'], (5 * pi) / 4, (7 * pi) / 4)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_topright'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_topright'][0] != 0:
             cr.new_path()
             cr.move_to(x2, y1)
             cr.line_to(x2, y1 + corner_width)
@@ -147,7 +147,7 @@ class Compizsettings ():
             cr.line_to(x2, y1)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_right'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_right'][0] != 0:
             # TODO : DRAW
             cr.new_path()
             cr.move_to(x2, y3)
@@ -156,7 +156,7 @@ class Compizsettings ():
             cr.arc(x2 + values['offset'], y3 + (left_right_width / 2), values['radius'], (3 * pi) / 4, (5 * pi) / 4)
             cr.fill_preserve()
 
-        if corner_store['cbox_' + cbox_title + '_bottomright'][0] != 0:
+        if corner_store[f'cbox_{cbox_title}_bottomright'][0] != 0:
             cr.new_path()
             cr.move_to(x2, y2)
             cr.line_to(x2 - corner_width, y2)
@@ -505,9 +505,6 @@ class Compizsettings ():
             self.ui['cbox_focus_mode'].set_active(1)
         elif gsettings.wm.get_enum('focus-mode') == 2:
             self.ui['cbox_focus_mode'].set_active(2)
-        else:
-            pass
-
         # Resize colours
         color = gsettings.resize.get_string('border-color')
         valid, gdkcolor = Gdk.Color.parse(color[:-2])
@@ -606,9 +603,13 @@ class Compizsettings ():
         if self.ui['switch_window_animations'].get_active() == True:
             self.ui.sensitize(dependants)
             maximize_combobox_text = self.ui['cbox_minimize_animation'].get_active_text()
-            gsettings.animation.set_strv('minimize-effects', ['animation:'+maximize_combobox_text])
+            gsettings.animation.set_strv(
+                'minimize-effects', [f'animation:{maximize_combobox_text}']
+            )
             minimize_combobox_text = self.ui['cbox_unminimize_animation'].get_active_text()
-            gsettings.animation.set_strv('unminimize-effects', ['animation:'+minimize_combobox_text])
+            gsettings.animation.set_strv(
+                'unminimize-effects', [f'animation:{minimize_combobox_text}']
+            )
         else:
             self.ui.unsensitize(dependants)
             gsettings.animation.set_strv('minimize-effects', ['animation:None'])
@@ -616,11 +617,15 @@ class Compizsettings ():
 
     def on_cbox_unminimize_animation_changed(self, widget, udata = None):
         combobox_text = self.ui['cbox_unminimize_animation'].get_active_text()
-        gsettings.animation.set_strv('unminimize-effects', ['animation:'+combobox_text])
+        gsettings.animation.set_strv(
+            'unminimize-effects', [f'animation:{combobox_text}']
+        )
 
     def on_cbox_minimize_animation_changed(self, widget, udata = None):
         combobox_text = self.ui['cbox_minimize_animation'].get_active_text()
-        gsettings.animation.set_strv('minimize-effects', ['animation:'+combobox_text])
+        gsettings.animation.set_strv(
+            'minimize-effects', [f'animation:{combobox_text}']
+        )
 
     def on_b_compiz_general_reset_clicked(self, widget):
         gsettings.core.reset('active-plugins')
@@ -751,10 +756,9 @@ class Compizsettings ():
             if 'grid' not in plugins:
                 plugins.append('grid')
                 gsettings.core.set_strv('active-plugins', plugins)
-        else:
-            if 'grid' in plugins:
-                plugins.remove('grid')
-                gsettings.core.set_strv('active-plugins', plugins)
+        elif 'grid' in plugins:
+            plugins.remove('grid')
+            gsettings.core.set_strv('active-plugins', plugins)
 
     def on_color_outline_color_color_set(self, widget, udata=None):
         colorhash = gsettings.color_to_hash(self.ui['color_outline_color'].get_color(),alpha=1)

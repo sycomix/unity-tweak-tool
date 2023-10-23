@@ -46,22 +46,19 @@ def update_config_old(libdir, values = {}):
     filename = os.path.join(libdir, 'UnityTweakTool/section/spaghetti/unitytweakconfig.py')
     oldvalues = {}
     try:
-        fin = open(filename, 'r')
-        fout = open(filename + '.new', 'w')
+        with open(filename, 'r') as fin:
+            with open(f'{filename}.new', 'w') as fout:
+                for line in fin:
+                    fields = line.split(' = ') # Separate variable from value
+                    if fields[0] in values:
+                        oldvalues[fields[0]] = fields[1].strip()
+                        line = "%s = %s\n" % (fields[0], values[fields[0]])
+                    fout.write(line)
 
-        for line in fin:
-            fields = line.split(' = ') # Separate variable from value
-            if fields[0] in values:
-                oldvalues[fields[0]] = fields[1].strip()
-                line = "%s = %s\n" % (fields[0], values[fields[0]])
-            fout.write(line)
-
-        fout.flush()
-        fout.close()
-        fin.close()
+                fout.flush()
         os.rename(fout.name, fin.name)
     except IOError as e:
-        print ("ERROR: Can't find %s" % filename)
+        print(f"ERROR: Can't find {filename}")
         sys.exit(1)
     return oldvalues
 
@@ -70,22 +67,19 @@ def update_config_new(libdir, values = {}):
     filename = os.path.join(libdir, 'UnityTweakTool/config/data.py')
     oldvalues = {}
     try:
-        fin = open(filename, 'r')
-        fout = open(filename + '.new', 'w')
+        with open(filename, 'r') as fin:
+            with open(f'{filename}.new', 'w') as fout:
+                for line in fin:
+                    fields = line.split(' = ') # Separate variable from value
+                    if fields[0] in values:
+                        oldvalues[fields[0]] = fields[1].strip()
+                        line = "%s = %s\n" % (fields[0], values[fields[0]])
+                    fout.write(line)
 
-        for line in fin:
-            fields = line.split(' = ') # Separate variable from value
-            if fields[0] in values:
-                oldvalues[fields[0]] = fields[1].strip()
-                line = "%s = %s\n" % (fields[0], values[fields[0]])
-            fout.write(line)
-
-        fout.flush()
-        fout.close()
-        fin.close()
+                fout.flush()
         os.rename(fout.name, fin.name)
     except IOError as e:
-        print ("ERROR: Can't find %s" % filename)
+        print(f"ERROR: Can't find {filename}")
         sys.exit(1)
     return oldvalues
 
@@ -97,16 +91,16 @@ def move_desktop_open(root, target_data, prefix):
 
     old_desktop_path = os.path.normpath(root + target_data +
                                         '/share/applications')
-    old_desktop_file = old_desktop_path + '/unity-tweak-tool.desktop'
+    old_desktop_file = f'{old_desktop_path}/unity-tweak-tool.desktop'
     desktop_path = os.path.normpath(root + prefix + '/share/applications')
-    desktop_file = desktop_path + '/unity-tweak-tool.desktop'
+    desktop_file = f'{desktop_path}/unity-tweak-tool.desktop'
 
     if not os.path.exists(old_desktop_file):
         print ("ERROR: Can't find", old_desktop_file)
         sys.exit(1)
-    elif target_data != prefix + '/':
+    elif target_data != f'{prefix}/':
         # This is an /opt install, so rename desktop file to use extras-
-        desktop_file = desktop_path + '/extras-unity-tweak-tool.desktop'
+        desktop_file = f'{desktop_path}/extras-unity-tweak-tool.desktop'
         try:
             os.makedirs(desktop_path)
             os.rename(old_desktop_file, desktop_file)
@@ -123,7 +117,7 @@ def compile_schemas(root, target_data):
     schemadir = os.path.normpath(root + target_data + 'share/glib-2.0/schemas')
     if (os.path.isdir(schemadir) and
             os.path.isopen('/usr/bin/glib-compile-schemas')):
-        os.system('/usr/bin/glib-compile-schemas "%s"' % schemadir)
+        os.system(f'/usr/bin/glib-compile-schemas "{schemadir}"')
 
 ## Translations. Adapted from pyroom setup.py ##
 
@@ -149,12 +143,14 @@ class InstallAndUpdateDataDirectory(DistUtilsExtra.auto.install_auto):
     def run(self):
         DistUtilsExtra.auto.install_auto.run(self)
 
-        target_data = '/' + os.path.relpath(self.install_data, self.root) + '/'
-        target_pkgdata = target_data + 'share/unity-tweak-tool/'
-        target_scripts = '/' + os.path.relpath(self.install_scripts, self.root) + '/'
+        target_data = f'/{os.path.relpath(self.install_data, self.root)}/'
+        target_pkgdata = f'{target_data}share/unity-tweak-tool/'
+        target_scripts = f'/{os.path.relpath(self.install_scripts, self.root)}/'
 
-        values = {'__unity_tweak_tool_data_directory__': "'%s'" % (target_pkgdata),
-                  '__version__': "'%s'" % self.distribution.get_version()}
+        values = {
+            '__unity_tweak_tool_data_directory__': f"'{target_pkgdata}'",
+            '__version__': f"'{self.distribution.get_version()}'",
+        }
         update_config(self.install_lib, values)
 
         desktop_file = move_desktop_open(self.root, target_data, self.prefix)

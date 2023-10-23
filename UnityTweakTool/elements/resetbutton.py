@@ -44,7 +44,7 @@ class ResetButton:
 
     def register(self,handler):
         ''' Register handler on a handler object '''
-        handler['on_%s_clicked'% self.id]=self.handler
+        handler[f'on_{self.id}_clicked'] = self.handler
         logger.debug('Handler for {self.id} registered'.format(self=self))
 
     def handler(self,*args,**kwargs):

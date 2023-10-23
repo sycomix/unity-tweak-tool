@@ -55,7 +55,7 @@ class FileChooser:
         file=self.widget.get_filename()
         if file is None:
             return
-        logger.info('Attempting to install %s'%file)
+        logger.info(f'Attempting to install {file}')
         logger.warn('Unimplemented logic')
         # TODO : Get file name and do the installation
         self.widget.destroy()

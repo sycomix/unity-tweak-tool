@@ -71,7 +71,9 @@ class Unitysettings ():
         del color, valid, gdkcolor
 
         # Show Desktop
-        self.ui['sw_show_desktop'].set_active(True if 'unity://desktop-icon' in gsettings.launcher.get_strv('favorites') else False)
+        self.ui['sw_show_desktop'].set_active(
+            'unity://desktop-icon' in gsettings.launcher.get_strv('favorites')
+        )
 
         # ====== Dash Helpers ===== #
         # Run Command History
@@ -84,8 +86,6 @@ class Unitysettings ():
         del dependants
 
 
-        # ====== Panel Helpers ====== #
-         # Default Player
         interested_players = gsettings.sound.get_strv('interested-media-players')
         preferred_players = gsettings.sound.get_strv('preferred-media-players')
 
@@ -178,7 +178,7 @@ class Unitysettings ():
             gsettings.unityshell.set_string('background-color', colorhash)
         else:
             self.ui.unsensitize(dependants)
-            gsettings.unityshell.set_string('background-color', colorhash[:-2]+'00')
+            gsettings.unityshell.set_string('background-color', f'{colorhash[:-2]}00')
 
 
     def on_sw_show_desktop_active_notify(self, widget, udata = None):
@@ -188,10 +188,9 @@ class Unitysettings ():
             if desktop not in fav:
                 fav.append(desktop)
                 gsettings.launcher.set_strv('favorites', fav)
-        else:
-            if desktop in fav:
-                fav.remove(desktop)
-                gsettings.launcher.set_strv('favorites', fav)
+        elif desktop in fav:
+            fav.remove(desktop)
+            gsettings.launcher.set_strv('favorites', fav)
         del desktop
 
     def on_b_unity_launcher_reset_clicked(self, widget):
